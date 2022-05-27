@@ -4,11 +4,38 @@
   
   
   <entry>
+    <title>B树和B+树</title>
+    <link href="/2022/05/27/B%E6%A0%91%E5%92%8CB+%E6%A0%91/"/>
+    <url>/2022/05/27/B%E6%A0%91%E5%92%8CB+%E6%A0%91/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>施工中：B树的增加删除查找节点的代码</p><p>某些不同的教材对于B树和B+树的定义与性质在一些细微处存在区别。本文按照王道论坛的《数据结构考研复习指导》。这本书中对于B树的定义有一个很大的不同就是引入了“终端节点”和“失败节点”：失败节点是叶子节点，终端节点是叶子节点的上一层。但是对于B树的各种计算中不包含失败节点</p></blockquote><h2 id="B树"><a class="header-anchor" href="#B树">¶</a>B树</h2><p><img src="/img/B-tree.png" alt="B树"></p><p>B树，即多路平衡查找树。先来从这个名字（B树的创造者没有解释&quot;B&quot;的由来。有人推测是&quot;balanced&quot;，还有的说是&quot;Boeing&quot;，因为这个数据结构是于他们在波音实验室中工作期间发明的）入手：B树的一个节点中的<strong>关键字</strong>可以有<img src="https://math.now.sh?inline=n" style="display:inline-block;margin: 0;"/>个，那这个节点的子节点的数量就是<img src="https://math.now.sh?inline=n%2B1" style="display:inline-block;margin: 0;"/>个，因此是<strong>多路</strong>的；B树是<strong>平衡</strong>树，且它的每个节点的平衡因子为0。</p><p>B树的所有节点的最大的子节点个数称为<strong>B树的阶</strong>(order)。如上图的B树的阶就是5。一个<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>阶的B树具有以下的性质：</p><ol><li>每个节点中的各个关键字以升序排列</li><li>每一个非根非叶节点都含有<img src="https://math.now.sh?inline=k" style="display:inline-block;margin: 0;"/>个子节点和<img src="https://math.now.sh?inline=k-1" style="display:inline-block;margin: 0;"/>个关键字，其中<img src="https://math.now.sh?inline=%5Clceil%20m%2F2%20%5Crceil%3C%3Dk%3C%3Dm" style="display:inline-block;margin: 0;"/></li><li>若根节点不是终端节点，则至少含有2个子树</li><li>所有的终端节点都位于同一层，所有叶子节点都位于同一层</li></ol><h3 id="性质推导"><a class="header-anchor" href="#性质推导">¶</a>性质推导</h3><p>B树中的大部分操作都是用于外存的，且对磁盘的存取次数与B树的高度成正比。下面对于高度的定义中忽略叶子节点层（失败节点层）</p><p>一个含有<img src="https://math.now.sh?inline=n" style="display:inline-block;margin: 0;"/>个关键字，阶为<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>的B树的最大高度和最小高度是多少？</p><ul><li>最小高度</li></ul><p>要使得B树的高度最小，那么每个节点要尽可能地塞满，即每个节点都有<img src="https://math.now.sh?inline=m-1" style="display:inline-block;margin: 0;"/>个关键字，也即每个节点都有<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>个子节点。</p><p>对于第0层（根所在的层），有1个节点；</p><p>第1层有<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>个节点；</p><p>第2层有<img src="https://math.now.sh?inline=m%5E2" style="display:inline-block;margin: 0;"/>个节点；</p><p>则<img src="https://math.now.sh?inline=h" style="display:inline-block;margin: 0;"/>层共有<br><img src="https://math.now.sh?inline=m%5E0%20%2B%20m%5E1%20%2B%20...%2B%20m%5E%7Bh-1%7D%20%3D%20%28m%5Eh%20-%201%29%20%2F%20(m%20-%201)" style="display:inline-block;margin: 0;"/>个节点，这些节点中都有<img src="https://math.now.sh?inline=m-1" style="display:inline-block;margin: 0;"/>个关键字。则一共有</p><p><img src="https://math.now.sh?inline=%28m-1%29%20*%20((m%5Eh%20-%201)%20%2F%20(m%20-%201))%20%3D%20m%5Eh%20-%201" style="display:inline-block;margin: 0;"/>个关键字。则又有：</p><p><img src="https://math.now.sh?inline=%28m%5Eh%20-%201%29%20%3E%3D%20n" style="display:inline-block;margin: 0;"/>，变形得到<img src="https://math.now.sh?inline=n%20%3E%3D%20%5Clog_m%20%7Bn%2B1%7D" style="display:inline-block;margin: 0;"/>，即含有<img src="https://math.now.sh?inline=n" style="display:inline-block;margin: 0;"/>个关键字阶为<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>的B树的最小高度为<img src="https://math.now.sh?inline=%5Clog_m%7Bn%2B1%7D" style="display:inline-block;margin: 0;"/></p><ul><li>最大高度</li></ul><p>要使得B树的高度最大，那么每个节点要尽可能地塞不满，但是由于B树的性质规定了每个非根节点中的子节点数最少为<img src="https://math.now.sh?inline=%5Clceil%20m%2F2%20%5Crceil" style="display:inline-block;margin: 0;"/>个。记为<img src="https://math.now.sh?inline=k" style="display:inline-block;margin: 0;"/></p><p>第0层有1个节点；</p><p>第1层有2个节点；</p><p>第2层有<img src="https://math.now.sh?inline=2k" style="display:inline-block;margin: 0;"/>个节点;</p><p>则<img src="https://math.now.sh?inline=h%2B1" style="display:inline-block;margin: 0;"/>层（叶子节点层，即失败节点层，但是计算高度时不算这一层）共有<img src="https://math.now.sh?inline=2k%5E%7Bh-1%7D" style="display:inline-block;margin: 0;"/>个节点。</p><p><strong>我们知道有<img src="https://math.now.sh?inline=n" style="display:inline-block;margin: 0;"/>个关键字的B树，失败节点的个数其实就是<img src="https://math.now.sh?inline=n%2B1" style="display:inline-block;margin: 0;"/>个</strong>。所以有</p><p><img src="https://math.now.sh?inline=n%2B1%3E%3D2k%5E%7Bh-1%7D" style="display:inline-block;margin: 0;"/>，变形得到<img src="https://math.now.sh?inline=h%20%3C%3D%20%5Clog_k%20%7B%28n%2B1%29%2F2%20%2B%201%7D" style="display:inline-block;margin: 0;"/></p><h2 id="B-树"><a class="header-anchor" href="#B-树">¶</a>B+树</h2><p>B+树主要用于数据库，是对B树的一种变体。</p><p>叶子节点中的每个关键字就是数据库中的<strong>索引</strong>，它还持有相应记录（元组）的指针</p><p><img src="/img/B+-tree.png" alt="B+树"></p><p>B+树的所有节点的关键字的最大数目称为B+树的阶（同时也是节点的最大子节点数），它具有如下性质：</p><ol><li>每个分支节点最多有<img src="https://math.now.sh?inline=m" style="display:inline-block;margin: 0;"/>棵子树</li><li>非叶根节点至少有2根子树，其他分支节点最少有<img src="https://math.now.sh?inline=%5Clceil%20m%2F2%20%5Crceil" style="display:inline-block;margin: 0;"/>个子树</li><li>每个节点的关键字数目和子树数目<strong>相同</strong></li><li>所有叶子节点包含全部关键字及指向相应记录的指针，叶子节点中关键字的大小依次升序排列，并且相邻叶子节点有指向下一个叶子节点的指针</li><li>分支节点中的每个关键字是其子树中的最大关键字的<strong>副本</strong>。B+树的叶子节点包含全部的关键字及指向对应<strong>记录</strong>的指针，所有非叶节点仅起到索引作用，即索引的索引</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>study</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+      <tag>施工中</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2022/05/27/hello-world/"/>
     <url>/2022/05/27/hello-world/</url>
     
-    <content type="html"><![CDATA[<p><s>这篇文章出现在这里的唯一原因是<code>hexo s</code>时<code>_posts</code>目录下没有文章会报错</s></p><p>正如同初学所有编程语言时，都会以打印出<code>Hello World</code>为开始，这篇<code>Hello World</code>出现在这里也作为我博客创建的一点注脚</p><p>但也许我已经失去了可以对这个世界好奇地发出&quot;Hello&quot;的心力与热情。那就让代码替我发出吧</p><p>鉴于最近在努力当一名<code>Rustacean</code>（谁知道呢，三个星期前还因为初学<code>Go</code>时的行云流水而想成为<code>gopher</code>，也许我凡事三分钟热度的性格缺陷，最后只想成为一名<code>loser</code>），CV一段<code>Rust</code>的<code>Hello World</code>吧</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, world&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><p>最后附一段看<em>Effective Java</em>第一章很喜欢的一句话：</p><p>“Learning the art of programming, like most other disciplines, consists of first learning the rules and then learning when to break them.”</p><p>Surviving期末中</p><p>End.</p>]]></content>
+    <content type="html"><![CDATA[<p><s>这篇文章出现在这里的唯一原因是<code>hexo s</code>时<code>_posts</code>目录下没有文章会报错</s></p><span id="more"></span><p>正如同初学所有编程语言时，都会以打印出<code>Hello World</code>为开始，这篇<code>Hello World</code>出现在这里也作为我博客创建的一点注脚</p><p>但也许我已经失去了可以对这个世界好奇地发出&quot;Hello&quot;的心力与热情。那就让代码替我发出吧</p><p>鉴于最近在努力当一名<code>Rustacean</code>（谁知道呢，三个星期前还因为初学<code>Go</code>时的行云流水而想成为<code>gopher</code>，也许我凡事三分钟热度的性格缺陷，最后只想成为一名<code>loser</code>），CV一段<code>Rust</code>的<code>Hello World</code>吧</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, world&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><p>最后附一段看<em>Effective Java</em>第一章很喜欢的一句话：</p><p>“Learning the art of programming, like most other disciplines, consists of first learning the rules and then learning when to break them.”</p><p>Surviving期末中</p><p>End.</p>]]></content>
     
     
     <categories>
