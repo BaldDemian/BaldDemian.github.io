@@ -16,16 +16,16 @@
   <meta name="author" content="Peiyang He">
   <meta name="keywords" content="">
   
-    <meta name="description" content="用超级马里奥解释享元模式(flywight pattern)">
+    <meta name="description" content="用超级马里奥解释享元模式(flyweight pattern)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="享元模式">
 <meta property="og:url" content="https://balddemian.github.io/2022/05/27/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Bald Demian">
-<meta property="og:description" content="用超级马里奥解释享元模式(flywight pattern)">
+<meta property="og:description" content="用超级马里奥解释享元模式(flyweight pattern)">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://balddemian.github.io/img/super-mario-banner.jpg">
 <meta property="article:published_time" content="2022-05-27T15:13:34.000Z">
-<meta property="article:modified_time" content="2022-05-27T15:23:26.198Z">
+<meta property="article:modified_time" content="2022-05-27T15:29:57.968Z">
 <meta property="article:author" content="Peiyang He">
 <meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary_large_image">
@@ -278,13 +278,14 @@
 <blockquote>
 <p>Use sharing to support large numbers of fine-grained objects efficiently.</p>
 </blockquote>
+<p>即“共享大量细粒度的对象以提高效率”</p>
 <p>下面用<strong>超级马里奥</strong>来进一步说明享元模式。</p>
 <h2 id="超级马里奥中的玄机"><a class="header-anchor" href="#超级马里奥中的玄机">¶</a>超级马里奥中的玄机</h2>
 <p>也许你从来没有注意过（或者像我一样从来没有玩过）最早的超级马里奥游戏中的云和草：</p>
 <p><img src="/img/super-mario.png" srcset="/img/loading.gif" lazyload alt=""></p>
 <p>它们竟然只是颜色不一样而已！</p>
 <p>游戏中这么多的云和草，如果为每一个都创建一个新的对象，对于那个年代的红白机的内存来说是不现实的。</p>
-<p>这里的云和草就符合“大量的细粒度的对象的定义”，于是根据享元模式的理念，我们考虑为云和草各自仅创建一个<strong>实例</strong>(instance)，在程序需要时<strong>复用</strong>（即共享）这两个实例。看到这里，如何实现<strong>控制实例的创建</strong>呢？聪明的<s>我</s>你肯定想到了，这不就是工厂模式嘛！</p>
+<p>这里的云和草就符合“大量的细粒度的对象“的定义，于是根据享元模式的理念，我们考虑为云和草各自仅创建一个<strong>实例</strong>(instance)，在程序需要时<strong>复用</strong>（即共享）这两个实例。看到这里，如何实现<strong>控制实例的创建</strong>呢？聪明的<s>我</s>你肯定想到了，这不就是工厂模式嘛！</p>
 <p>——是的，享元模式经常配合工厂模式使用。</p>
 <h2 id="UML"><a class="header-anchor" href="#UML">¶</a>UML</h2>
 <p>这是四人帮那部大名鼎鼎的设计模式一书中享元模式的类图，下面我们来分析：</p>
@@ -431,8 +432,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/05/27/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/05/27/B%E6%A0%91%E5%92%8CB+%E6%A0%91/" title="B树和B+树">
+                        <span class="hidden-mobile">B树和B+树</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
