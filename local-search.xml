@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2022/05/27/hello-world/"/>
+    <url>/2022/05/27/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p><s>这篇文章出现在这里的唯一原因是<code>hexo s</code>时<code>_posts</code>目录下没有文章会报错</s></p><p>正如同初学所有编程语言时，都会以打印出<code>Hello World</code>为开始，这篇<code>Hello World</code>出现在这里也作为我博客创建的一点注脚</p><p>但也许我已经失去了可以对这个世界好奇地发出&quot;Hello&quot;的心力与热情。那就让代码替我发出吧</p><p>鉴于最近在努力当一名<code>Rustacean</code>（谁知道呢，三个星期前还因为初学<code>Go</code>时的行云流水而想成为<code>gopher</code>，也许我凡事三分钟热度的性格缺陷，最后只想成为一名<code>loser</code>），CV一段<code>Rust</code>的<code>Hello World</code>吧</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, world&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><p>最后附一段看<em>Effective Java</em>第一章很喜欢的一句话：</p><p>“Learning the art of programming, like most other disciplines, consists of first learning the rules and then learning when to break them.”</p><p>Surviving期末中</p><p>End.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>life</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>杂</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
